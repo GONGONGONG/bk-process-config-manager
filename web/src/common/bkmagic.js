@@ -23,6 +23,8 @@ export const messageError = (message, delay = 3000) => {
     message,
     delay,
     theme: 'error',
+    ellipsisLine: 1,
+    ellipsisCopy: true,
   });
 };
 
