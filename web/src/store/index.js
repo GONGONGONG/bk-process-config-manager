@@ -102,6 +102,9 @@ const store = new Vuex.Store({
     routeConfigTemplateGenerate(state, { templateId }) { // 配置文件模板 ==> 配置生成
       router.push(`/config-file/template/${templateId}/generate`);
     },
+    routeConfigTemplateCheck(state, { templateId }) { // 配置文件模板 ==> 配置检查
+      router.push(`/config-file/template/${templateId}/check`);
+    },
 
     routeProcessManageStatus() { // 进程管理进程状态列表
       router.push('/process-manage/status');

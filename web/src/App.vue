@@ -309,6 +309,10 @@ export default {
     display: flex;
     align-items: center;
 
+    .bk-button-text + .bk-button-text {
+      margin-left: 12px;
+    }
+
     .dot-menu-trigger {
       display: flex;
       justify-content: center;

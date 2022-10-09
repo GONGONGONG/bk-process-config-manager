@@ -91,9 +91,9 @@
           {{ formatDate(row.updated_at) }}
         </template>
       </bk-table-column>
-      <bk-table-column :label="$t('操作')">
+      <bk-table-column :label="$t('操作')" :width="240">
         <div class="table-operation-container" slot-scope="{ row }">
-          <AuthTag style="margin-right: 12px;" action="operate_config" :authorized="authMap.operate_config">
+          <AuthTag class="bk-button-text" action="operate_config" :authorized="authMap.operate_config">
             <div slot-scope="{ disabled }" v-bk-tooltips="{
               content: !row.has_version ? $t('没有可用版本，无法进行配置下发') : $t('未关联进程，无法进行配置下发'),
               disabled: row.has_version && row.is_bound
@@ -109,6 +109,19 @@
           <bk-button v-test="'connectProcess'" theme="primary" text @click="operateBind(row)">
             {{ $t('关联进程') }}
           </bk-button>
+          <AuthTag class="bk-button-text" action="operate_config" :authorized="authMap.operate_config">
+            <div slot-scope="{ disabled }" v-bk-tooltips="{
+              content: $t('未下发配置，无法进行配置检查'),
+              disabled: row.has_release
+            }">
+              <bk-button
+                text theme="primary" :disabled="disabled || !row.has_release"
+                v-test="'configCheck'"
+                @click="operateConfigCheck(row)">
+                {{ $t('配置检查') }}
+              </bk-button>
+            </div>
+          </AuthTag>
           <bk-popover
             placement="bottom-start"
             theme="dot-menu light"
@@ -266,6 +279,13 @@ export default {
     operateDistribute(row) {
       this.$emit('selectConfig', row);
       this.$store.commit('routeConfigTemplateDistribute', {
+        templateId: row.config_template_id,
+      });
+    },
+    // 配置检查
+    operateConfigCheck(row) {
+      this.$emit('selectConfig', row);
+      this.$store.commit('routeConfigTemplateCheck', {
         templateId: row.config_template_id,
       });
     },
