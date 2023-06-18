@@ -3,48 +3,53 @@
  * @author blueking
  */
 
-import Vue from 'vue';
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 import cookie from 'cookie';
 
 import CachedPromise from './cached-promise';
 import RequestQueue from './request-queue';
-import { messageError } from '@/common/bkmagic';
+// import { bus } from '@/common/bus';
+import { Message } from 'bkui-vue';
 import UrlParse from 'url-parse';
 import queryString from 'query-string';
 
 // axios 实例
-const axiosInstance = axios.create({
+export const axiosInstance: AxiosInstance = axios.create({
   withCredentials: true,
   headers: { 'X-REQUESTED-WITH': 'XMLHttpRequest' },
+  // xsrf token 的值的 cookie 的名称，默认为 XSRF-TOKEN
+  xsrfCookieName: window.PROJECT_CONFIG.CSRF_COOKIE_NAME,
+  // xsrf token 的值的 HTTP 头的名称，默认为 X-XSRF-TOKEN
+  xsrfHeaderName: 'X-CSRFToken',
   baseURL: window.PROJECT_CONFIG.AJAX_URL_PREFIX,
 });
 
 /**
  * request interceptor
  */
-axiosInstance.interceptors.request.use((config) => {
-  const urlObj = new UrlParse(config.url);
-  const query = queryString.parse(urlObj.query);
-  if (query[AJAX_MOCK_PARAM]) {
-    // 直接根路径没有 pathname，例如 http://localhost:LOCAL_DEV_PORT/?mock-file=index&invoke=btn1&btn=btn1
-    // axios get 请求不会请求到 devserver，因此在 pathname 不存在或者为 / 时，加上一个 /mock 的 pathname
-    if (!urlObj.pathname) {
-      config.url = `${LOCAL_DEV_URL}:${LOCAL_DEV_PORT}/mock/${urlObj.query}`;
-    } else if (urlObj.pathname === '/') {
-      config.url = `${LOCAL_DEV_URL}:${LOCAL_DEV_PORT}/mock/${urlObj.query}`;
-    } else {
-      config.url = `${LOCAL_DEV_URL}:${LOCAL_DEV_PORT}${urlObj.pathname}${urlObj.query}`;
-    }
-  } else if (window.PROJECT_CONFIG.IS_MOCK) { // 后端接口返回 MOCK 数据，可避免权限问题，方便体验静态页面
-    if (config.url.includes('?')) {
-      config.url += '&is_mock=true';
-    } else {
-      config.url += '?is_mock=true';
-    }
-  }
-  return config;
-}, error => Promise.reject(error));
+axiosInstance.interceptors.request.use(
+  (config: any) =>
+  // const urlObj = new UrlParse(config.url);
+  // const query = queryString.parse(urlObj.query as any);
+  // if (AJAX_MOCK_PARAM && query[AJAX_MOCK_PARAM]) {
+  //   // 直接根路径没有 pathname，例如 http://localhost:LOCAL_DEV_PORT/?mock-file=index&invoke=btn1&btn=btn1
+  //   // axios get 请求不会请求到 devserver，因此在 pathname 不存在或者为 / 时，加上一个 /mock 的 pathname
+  //   if (!urlObj.pathname) {
+  //     config.url = `${LOCAL_DEV_URL}:${LOCAL_DEV_PORT}/mock/${urlObj.query}`;
+  //   } else if (urlObj.pathname === '/') {
+  //     config.url = `${LOCAL_DEV_URL}:${LOCAL_DEV_PORT}/mock/${urlObj.query}`;
+  //   } else if (LOCAL_DEV_URL && LOCAL_DEV_PORT) {
+  //     config.url = `${LOCAL_DEV_URL}:${LOCAL_DEV_PORT}${urlObj.pathname}${urlObj.query}`;
+  //   } else if (LOCAL_DEV_URL) {
+  //     config.url = `${LOCAL_DEV_URL}${urlObj.pathname}${urlObj.query}`;
+  //   }
+  // }
+
+    // 在发起请求前，注入CSRFToken，解决跨域
+    // injectCSRFTokenToHeaders();
+    config,
+  error => Promise.reject(error),
+);
 
 /**
  * response interceptor
@@ -54,16 +59,16 @@ axiosInstance.interceptors.response.use(
   error => Promise.reject(error),
 );
 
-const http = {
+const http: HttpApi = {
   queue: new RequestQueue(),
   cache: new CachedPromise(),
-  cancelRequest: requestId => http.queue.cancel(requestId),
-  cancelCache: requestId => http.cache.delete(requestId),
-  cancel: requestId => Promise.all([http.cancelRequest(requestId), http.cancelCache(requestId)]),
+  cancelRequest: (requestId: string) => http.queue.cancel(requestId),
+  cancelCache: (requestId: string) => http.cache.delete(requestId),
+  cancel: (requestId: string) => Promise.all([http.cancelRequest(requestId), http.cancelCache(requestId)]),
 };
 
-const methodsWithoutData = ['delete', 'get', 'head', 'options'];
-const methodsWithData = ['post', 'put', 'patch'];
+const methodsWithoutData: HttpMethodType[] = ['delete', 'get', 'head', 'options'];
+const methodsWithData: HttpMethodType[] = ['post', 'put', 'patch'];
 const allMethods = [...methodsWithoutData, ...methodsWithData];
 
 // 在自定义对象 http 上添加各请求方法
@@ -82,11 +87,11 @@ allMethods.forEach((method) => {
  *
  * @return {Function} 实际调用的请求函数
  */
-function getRequest(method) {
+function getRequest(method: HttpMethodType) {
   if (methodsWithData.includes(method)) {
-    return (url, data, config) => getPromise(method, url, data, config);
+    return (url: string, data: any, config: any) => getPromise(method, url, data, config);
   }
-  return (url, config) => getPromise(method, url, null, config);
+  return (url: string, config: any) => getPromise(method, url, null, config);
 }
 
 /**
@@ -99,7 +104,7 @@ function getRequest(method) {
  *
  * @return {Promise} 本次http请求的Promise
  */
-async function getPromise(method, url, data, userConfig = {}) {
+async function getPromise(method: HttpMethodType, url: string, data: any | null, userConfig = {}) {
   const config = initConfig(method, url, userConfig);
   let promise;
   if (config.cancelPrevious) {
@@ -129,9 +134,10 @@ async function getPromise(method, url, data, userConfig = {}) {
       Object.assign(config, error.config);
       reject(error);
     }
-  }).catch(error => handleReject(error, config))
+  })
+    .catch(error => handleReject(error, config))
     .finally(() => {
-    // console.log('finally', config)
+      // console.log('finally', config)
     });
 
   // 添加请求队列
@@ -150,13 +156,13 @@ async function getPromise(method, url, data, userConfig = {}) {
  * @param {Function} promise 完成函数
  * @param {Function} promise 拒绝函数
  */
-function handleResponse({ config, response, resolve, reject }) {
+function handleResponse(params: { config: any; response: any; resolve: any; reject: any }) {
   if (!response.result && config.globalError) {
     if (`${response.code}` === '9900403') {
-      window.bus.$emit('show-permission-modal', {
-        trigger: 'request',
-        requestData: response.data,
-      });
+      // window.bus.$emit('show-permission-modal', {
+      //   trigger: 'request',
+      //   requestData: response.data,
+      // });
     }
     reject({ message: response.message });
   } else {
@@ -173,7 +179,7 @@ function handleResponse({ config, response, resolve, reject }) {
  *
  * @return {Promise} promise 对象
  */
-function handleReject(error, config) {
+function handleReject(error: any, config: any) {
   if (axios.isCancel(error)) {
     return Promise.reject(error);
   }
@@ -214,7 +220,7 @@ function handleReject(error, config) {
  *
  * @return {Promise} 本次 http 请求的 Promise
  */
-function initConfig(method, url, userConfig) {
+function initConfig(method: HttpMethodType, url: string, userConfig: any) {
   const defaultConfig = {
     ...getCancelToken(),
     // http 请求默认 id
@@ -251,8 +257,6 @@ function getCancelToken() {
   };
 }
 
-Vue.prototype.$http = http;
-
 export default http;
 
 /**
@@ -265,4 +269,5 @@ export function injectCSRFTokenToHeaders() {
   } else {
     console.warn('Can not find csrftoken in document.cookie');
   }
+  return CSRFToken;
 }

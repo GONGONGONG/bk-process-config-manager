@@ -17,36 +17,35 @@
     @toggle="handleToggle"
     @change="handleChange"
     @clear="handleClear">
-    <template v-for="item in optionList">
-      <bk-option
-        :key="item[id]"
-        :id="item[id]"
-        :name="item[name]"
-        :class="{ 'is-auth-disabled': !item.view_business }"
-        :disabled="item.disabled">
-        <div class="bk-option-content-default" :title="item[name]">
-          <span class="bk-option-name">
-            {{ item[name] }}
-          </span>
-          <i
-            class="select-item-icon bk-option-icon bk-icon icon-check-1"
-            v-if="multiple && selectValue.includes(item[id])">
-          </i>
-          <AuthTag
-            v-if="!item.view_business"
-            class="bk-option-content-default"
-            tag="div"
-            type="biz"
-            action="view_business"
-            :auto-emit="true"
-            :title="item[name]"
-            :id="item.bk_biz_id"
-            :authorized="item.view_business"
-            @click="handleAuthClick(item)">
-          </AuthTag>
-        </div>
-      </bk-option>
-    </template>
+    <bk-option
+      v-for="item in optionList"
+      :key="item[id]"
+      :id="item[id]"
+      :name="item[name]"
+      :class="{ 'is-auth-disabled': !item.view_business }"
+      :disabled="item.disabled">
+      <div class="bk-option-content-default" :title="item[name]">
+        <span class="bk-option-name">
+          {{ item[name] }}
+        </span>
+        <i
+          class="select-item-icon bk-option-icon bk-icon icon-check-1"
+          v-if="multiple && selectValue.includes(item[id])">
+        </i>
+        <AuthTag
+          v-if="!item.view_business"
+          class="bk-option-content-default"
+          tag="div"
+          type="biz"
+          action="view_business"
+          :auto-emit="true"
+          :title="item[name]"
+          :id="item.bk_biz_id"
+          :authorized="item.view_business"
+          @click="handleAuthClick(item)">
+        </AuthTag>
+      </div>
+    </bk-option>
     <div slot="extension" class="auth-extension-content" @click="handleExtension">
       <i class="bk-icon icon-plus-circle mr5"></i>{{ $t('新增') }}
     </div>

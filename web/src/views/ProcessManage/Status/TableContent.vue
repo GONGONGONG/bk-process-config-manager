@@ -13,7 +13,7 @@
       @page-change="handlePageChange"
       @page-limit-change="handlePageLimitChange">
       <bk-table-column type="expand" width="30" :before-expand-change="onBeforeExpandChange">
-        <template slot-scope="{ row }">
+        <template v-slot="{ row }">
           <div class="process-status" v-if="row.proc_inst_infos.length">
             <div class="col-status-item" v-for="(instInfo, index) in row.proc_inst_infos" :key="instInfo.id">
               <div class="item-instance-text">{{ $t('实例') + (index + 1) }}</div>
@@ -64,87 +64,86 @@
           </bk-checkbox>
         </div>
       </bk-table-column>
-      <template v-for="item in setting.selectedFields">
-        <bk-table-column
-          v-if="!['process_status', 'is_auto', 'bk_process_id'].includes(item.id)"
-          :key="item.id"
-          :label="item.label"
-          :prop="item.id"
-          :min-width="columnMinWidth[item.id]"
-          :sortable="item.sortable ? 'custom' : ''">
-          <div slot-scope="{ row }" v-bk-overflow-tips>
-            <!-- 配置文件数 -->
-            <!-- <div v-if="item.id === 'config_templates'" @click.stop>
-              <template v-if="row.templateCount">
-                <bk-popover placement="right">
-                  <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
-                  <div slot="content">
-                    <div v-for="file in row.config_templates" :key="file.config_template_id">
-                      <span>{{ file.template_name }}</span>
-                      {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
-                    </div>
+      <bk-table-column
+        v-for="item in setting.selectedFields"
+        v-if="!['process_status', 'is_auto', 'bk_process_id'].includes(item.id)"
+        :key="item.id"
+        :label="item.label"
+        :prop="item.id"
+        :min-width="columnMinWidth[item.id]"
+        :sortable="item.sortable ? 'custom' : ''">
+        <div slot-scope="{ row }" v-bk-overflow-tips>
+          <!-- 配置文件数 -->
+          <!-- <div v-if="item.id === 'config_templates'" @click.stop>
+            <template v-if="row.templateCount">
+              <bk-popover placement="right">
+                <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
+                <div slot="content">
+                  <div v-for="file in row.config_templates" :key="file.config_template_id">
+                    <span>{{ file.template_name }}</span>
+                    {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
                   </div>
-                </bk-popover>
-              </template>
-              <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
-            </div>
-            其他
-            <template v-else> -->
-            <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
-            <!-- </template> -->
+                </div>
+              </bk-popover>
+            </template>
+            <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
           </div>
-        </bk-table-column>
-        <!-- process_id -->
-        <bk-table-column
-          v-if="item.id === 'bk_process_id'"
-          :label="item.label"
-          :prop="item.id"
-          :key="item.id"
-          :min-width="columnMinWidth[item.id]"
-          sortable="custom"
-          :render-header="renderProcessHeader">
-          <template slot-scope="{ row }">
-            <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
-          </template>
-        </bk-table-column>
-        <!-- 进程状态 -->
-        <bk-table-column
-          v-if="item.id === 'process_status'"
-          :label="item.label"
-          :prop="item.id"
-          :key="item.id"
-          :min-width="columnMinWidth[item.id]"
-          :render-header="renderFilterHeader">
-          <template slot-scope="{ row }">
-            <StatusView v-if="row.process_status === 0" type="origin" :is-solid="true" :text="$t('未运行')" />
-            <StatusView v-else-if="row.process_status === 1" type="success" :is-solid="true" :text="$t('运行中')" />
-            <StatusView v-else-if="row.process_status === 2" type="failed" :is-solid="true" :text="$t('未运行')" />
-          </template>
-        </bk-table-column>
-        <!-- 托管状态 -->
-        <bk-table-column
-          v-if="item.id === 'is_auto'"
-          :label="item.label"
-          :prop="item.id"
-          :key="item.id"
-          :min-width="columnMinWidth[item.id]"
-          :render-header="renderFilterHeader">
-          <template slot-scope="{ row }">
-            <span
-              :class="['hosting-status', row.process_status === 1 ? (row.is_auto ? 'hosting' : 'fail') : 'unmanaged']"
-              v-bk-tooltips="{
-                content: $t('进程处于未托管状态如遇异常退出不会被自动拉起'),
-                disabled: row.process_status !== 1 || !!row.is_auto
-              }">
-              {{ row.is_auto ? $t('托管中') : $t('未托管') }}
-            </span>
-          </template>
-        </bk-table-column>
-      </template>
+          其他
+          <template v-else> -->
+          <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
+          <!-- </template> -->
+        </div>
+      </bk-table-column>
+      <!-- process_id -->
+      <bk-table-column
+        v-if="item.id === 'bk_process_id'"
+        :label="item.label"
+        :prop="item.id"
+        :key="item.id"
+        :min-width="columnMinWidth[item.id]"
+        sortable="custom"
+        :render-header="renderProcessHeader">
+        <template v-slot="{ row }">
+          <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
+        </template>
+      </bk-table-column>
+      <!-- 进程状态 -->
+      <bk-table-column
+        v-if="item.id === 'process_status'"
+        :label="item.label"
+        :prop="item.id"
+        :key="item.id"
+        :min-width="columnMinWidth[item.id]"
+        :render-header="renderFilterHeader">
+        <template v-slot="{ row }">
+          <StatusView v-if="row.process_status === 0" type="origin" :is-solid="true" :text="$t('未运行')" />
+          <StatusView v-else-if="row.process_status === 1" type="success" :is-solid="true" :text="$t('运行中')" />
+          <StatusView v-else-if="row.process_status === 2" type="failed" :is-solid="true" :text="$t('未运行')" />
+        </template>
+      </bk-table-column>
+      <!-- 托管状态 -->
+      <bk-table-column
+        v-if="item.id === 'is_auto'"
+        :label="item.label"
+        :prop="item.id"
+        :key="item.id"
+        :min-width="columnMinWidth[item.id]"
+        :render-header="renderFilterHeader">
+        <template v-slot="{ row }">
+          <span
+            :class="['hosting-status', row.process_status === 1 ? (row.is_auto ? 'hosting' : 'fail') : 'unmanaged']"
+            v-bk-tooltips="{
+              content: $t('进程处于未托管状态如遇异常退出不会被自动拉起'),
+              disabled: row.process_status !== 1 || !!row.is_auto
+            }">
+            {{ row.is_auto ? $t('托管中') : $t('未托管') }}
+          </span>
+        </template>
+      </bk-table-column>
       <bk-table-column :label="$t('操作')" width="170" class="operat-headr">
         <div class="table-operation-container" slot-scope="{ row }" @click.stop>
           <AuthTag action="manage_process" :authorized="authMap.manage_process">
-            <template slot-scope="{ disabled }">
+            <template v-slot="{ disabled }">
               <bk-popover :disabled="row.process_status !== 1"
                           :content="$t('进程运行中，无需启动')">
                 <bk-button
@@ -172,7 +171,7 @@
             </template>
           </AuthTag>
           <AuthTag action="operate_config" :authorized="authMap.operate_config">
-            <template slot-scope="{ disabled }">
+            <template v-slot="{ disabled }">
               <bk-popover :disabled="Boolean(row.templateCount)"
                           :content="$t('没有绑定配置文件，无法进行配置下发')">
                 <bk-button
@@ -226,6 +225,7 @@
 </template>
 
 <script>
+import { ref, h } from 'vue';
 import { mapState } from 'vuex';
 import ColumnCheck from '@/components/ColumnCheck';
 import FilterHeader from '@/components/FilterHeader';
@@ -398,7 +398,7 @@ export default {
         const defaultColumn = fields;
         this.setting.size = size;
         this.setting.selectedFields = this.fields.slice(0).filter(m => defaultColumn.includes(m.id));
-        this.computedColumnWidth()
+        this.computedColumnWidth();
       }
     },
     handleSortChange({ prop, order }) {
@@ -410,19 +410,19 @@ export default {
       this.setChecked(filterList);
       const title = data.column.label || '';
       const property = data.column.property || '';
-      return <FilterHeader
-        name={ title } property={ property } filterList={ filterList }
-        onConfirm={ (prop, list) => this.handleFilterHeaderConfirm(prop, list) }
-        onReset={ prop => this.handleFilterHeaderReset(prop) }>
-      </FilterHeader>;
+      return h(FilterHeader, {
+        name: title,
+        property,
+        filterList,
+        onConfirm: (prop, list) => this.handleFilterHeaderConfirm(prop, list),
+        onReset: prop => this.handleFilterHeaderReset(prop),
+      });
     },
     // 自定义进程表头
-    renderProcessHeader(h, data) {
+    renderProcessHeader(ctx, data) {
       const title = data.column.label || '';
       const tips = this.$t('配置平台统一为每一个进程实例单独分配了全局唯一的ID，此ID非旧版“实例ID”且不可更改');
-      return <ProcessHeader
-        name={ title } tips={ tips }>
-      </ProcessHeader>;
+      return h(ProcessHeader, { name: title, tips });
     },
     setChecked(data) {
       data.forEach((item) => {
@@ -445,14 +445,14 @@ export default {
      * 自定义selection表头
      */
     renderSelectionHeader() {
-      return <ColumnCheck
-        ref="customSelectionHeader"
-        indeterminate={this.indeterminate}
-        isAllChecked={this.isAllChecked}
-        loading={this.checkLoading}
-        disabled={Boolean(this.tableData.length)}
-        onChange={value => this.handleCheckAll(value)}>
-      </ColumnCheck>;
+      return h(ColumnCheck, {
+        ref: 'customSelectionHeader',
+        indeterminate: this.indeterminate,
+        isAllChecked: this.isAllChecked,
+        loading: this.checkLoading,
+        disabled: Boolean(this.tableData.length),
+        onChange: value => this.handleCheckAll(value),
+      });
     },
     /**
      * 表头勾选事件
@@ -489,7 +489,7 @@ export default {
         fields: fieldIds,
         size,
       }));
-      this.computedColumnWidth()
+      this.computedColumnWidth();
     },
     // 切换页
     handlePageChange(page) {
@@ -560,7 +560,7 @@ export default {
         return obj;
       }, widthMap);
       this.columnMinWidth = widthMap;
-    }
+    },
   },
 };
 </script>

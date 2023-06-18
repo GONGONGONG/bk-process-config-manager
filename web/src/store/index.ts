@@ -3,8 +3,11 @@
  * @author blueking
  */
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import type { InjectionKey } from 'vue';
+import { createStore, useStore as baseUseStore, Store } from 'vuex';
+// import { createStore, useStore as baseUseStore, createLogger, Store } from 'vuex';
+// import createPersistedState from 'vuex-persistedstate';
+
 // 一个一个引入，方便 IDE 解析
 import iam from './modules/iam';
 import cmdb from './modules/cmdb';
@@ -15,13 +18,19 @@ import job from './modules/job';
 import meta from './modules/meta';
 import process from './modules/process';
 import home from './modules/home';
-import { unifyObjectStyle } from '@/common/util';
+// import { unifyObjectStyle } from '@/common/util';
+
 import router from '@/router';
 
-Vue.use(Vuex);
+import type { IRootState, IHomeSate, IActivityState } from './stateType';
 
-const store = new Vuex.Store({
-  // 模块
+type StoreModules = {
+  test: IHomeSate;
+  // activity: IActivityState;
+};
+
+const store = createStore<IRootState>({
+  strict: true,
   modules: {
     iam,
     cmdb,
@@ -142,6 +151,19 @@ const store = new Vuex.Store({
     },
   },
   actions: {},
+  // plugins:
+  //   process.env.NODE_ENV !== 'production'
+  //     ? [
+  //       createLogger(),
+  //       createPersistedState({
+  //         paths: ['home'],
+  //       }),
+  //     ]
+  //     : [
+  //       createPersistedState({
+  //         paths: ['home'],
+  //       }),
+  //     ],
 });
 
 /**
@@ -153,29 +175,37 @@ const store = new Vuex.Store({
  *
  * @return {Promise} 执行请求的 promise
  */
-store.dispatch = function (_type, _payload, config = {}) {
-  const { type, payload } = unifyObjectStyle(_type, _payload);
+// store.dispatch = function (_type, _payload, config = {}) {
+//   const { type, payload } = unifyObjectStyle(_type, _payload);
 
-  const action = { type, payload, config };
-  const entry = store._actions[type];
-  if (!entry) {
-    if (NODE_ENV !== 'production') {
-      console.error(`[vuex] unknown action type: ${type}`);
-    }
-    return;
-  }
+//   const action = { type, payload, config };
+//   const entry = store._actions[type];
+//   if (!entry) {
+//     if (NODE_ENV !== 'production') {
+//       console.error(`[vuex] unknown action type: ${type}`);
+//     }
+//     return;
+//   }
 
-  store._actionSubscribers.forEach((sub) => {
-    if (typeof sub === 'function') {
-      sub(action, store.state);
-    } else if (sub.after && typeof sub.after === 'function') {
-      sub.after && sub.after(action, store.state);
-    }
-  });
+//   store._actionSubscribers.forEach((sub) => {
+//     if (typeof sub === 'function') {
+//       sub(action, store.state);
+//     } else if (sub.after && typeof sub.after === 'function') {
+//       sub.after && sub.after(action, store.state);
+//     }
+//   });
 
-  return entry.length > 1
-    ? Promise.all(entry.map(handler => handler(payload, config)))
-    : entry[0](payload, config);
-};
+//   return entry.length > 1
+//     ? Promise.all(entry.map(handler => handler(payload, config)))
+//     : entry[0](payload, config);
+// };
+
+
+type StoreAll = Store<IRootState & StoreModules>;
+
+export const storeKey: InjectionKey<StoreAll> = Symbol();
+export function useStore(): StoreAll {
+  return baseUseStore(storeKey);
+}
 
 export default store;

@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 class TextTool {
   canvas = null;
   ctx  = null;
@@ -75,5 +73,3 @@ class TextTool {
 }
 
 export const textTool = new TextTool();
-
-Vue.prototype.$textTool = textTool;

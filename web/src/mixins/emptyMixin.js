@@ -1,6 +1,6 @@
-import Vue from 'vue';
+// import Vue from 'vue';
 
-const EmptyMixin = {
+export const EmptyMixin = {
   methods: {
     emptySearchClear() {
       this.$emit('empty-clear');
@@ -11,4 +11,4 @@ const EmptyMixin = {
   },
 };
 
-Vue.mixin(EmptyMixin);
+// Vue.mixin(EmptyMixin);

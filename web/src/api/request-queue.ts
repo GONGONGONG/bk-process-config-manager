@@ -3,7 +3,14 @@
  * @author blueking
  */
 
+interface Request {
+  requestId: string;
+  [key: string]: any;
+}
+
 export default class RequestQueue {
+  queue: Request[];
+
   constructor() {
     this.queue = [];
   }
@@ -15,7 +22,7 @@ export default class RequestQueue {
      *
      * @return {Array|Object} 队列集合或队列对象
      */
-  get(id) {
+  get(id: string) {
     if (typeof id === 'undefined') {
       return this.queue;
     }
@@ -27,7 +34,7 @@ export default class RequestQueue {
      *
      * @param {Object} newRequest 请求对象
      */
-  set(newRequest) {
+  set(newRequest: Request) {
     this.queue.push(newRequest);
     // if (!this.queue.some(request => request.requestId === newRequest.requestId)) {
     //     this.queue.push(newRequest)
@@ -39,7 +46,7 @@ export default class RequestQueue {
      *
      * @param {string} id id
      */
-  delete(id) {
+  delete(id: string) {
     // const target = this.queue.filter(request => request.requestId === id)[0]
     // if (target) {
     //     const index = this.queue.indexOf(target)
@@ -56,8 +63,8 @@ export default class RequestQueue {
      *
      * @return {Promise} promise 对象
      */
-  cancel(requestIds, msg = 'request canceled') {
-    let cancelQueue = [];
+  cancel(requestIds: string | string[], msg = 'request canceled') {
+    let cancelQueue: Request[] = [];
     if (typeof requestIds === 'undefined') {
       cancelQueue = [...this.queue];
     } else if (requestIds instanceof Array) {

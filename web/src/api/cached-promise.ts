@@ -3,7 +3,13 @@
  * @author blueking
  */
 
+interface Cache {
+  [key: string]: any;
+}
+
 export default class CachedPromise {
+  cache: Cache;
+
   constructor() {
     this.cache = {};
   }
@@ -15,7 +21,7 @@ export default class CachedPromise {
      *
      * @return {Array|Promise} 缓存集合或promise 缓存对象
      */
-  get(id) {
+  get(id: string) {
     if (typeof id === 'undefined') {
       return Object.keys(this.cache).map(requestId => this.cache[requestId]);
     }
@@ -30,7 +36,7 @@ export default class CachedPromise {
      *
      * @return {Promise} promise 对象
      */
-  set(id, promise) {
+  set(id: string, promise: T) {
     Object.assign(this.cache, { [id]: promise });
   }
 
@@ -41,7 +47,7 @@ export default class CachedPromise {
      *
      * @return {Promise} 以成功的状态返回 Promise 对象
      */
-  delete(deleteIds) {
+  delete(deleteIds: string | string[]) {
     let requestIds = [];
     if (typeof deleteIds === 'undefined') {
       requestIds = Object.keys(this.cache);

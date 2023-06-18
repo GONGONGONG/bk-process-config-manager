@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <div class="status-view-container">
     <svg v-if="props.type === 'loading'" class="svg-icon" aria-hidden="true">
       <use xlink:href="#gsekit-icon-loading"></use>

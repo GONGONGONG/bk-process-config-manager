@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="app">
-    <Header @showMain="showMain = true" />
+    <PageHeader @showMain="showMain = true" />
     <AuthModal ref="authModal"></AuthModal>
     <main class="main-content" v-bkloading="{ isLoading: mainContentLoading, opacity: 1 }">
       <template v-if="showMain">
@@ -13,14 +13,14 @@
 
 <script>
 import { mapState } from 'vuex';
-import Header from './components/Header';
+import PageHeader from '@/components/Header';
 import AuthModal from '@/components/Auth/AuthModal';
 import AuthPage from '@/components/Auth/AuthPage';
 
 export default {
   name: 'App',
   components: {
-    Header,
+    PageHeader,
     AuthModal,
     AuthPage,
   },
@@ -50,12 +50,12 @@ export default {
       }, 300);
     };
     window.addEventListener('resize', this.resizeListener, { passive: true });
-    window.bus.$on('show-permission-modal', (data) => {
-      this.$refs.authModal.show(data);
-    });
+    // window.bus.$on('show-permission-modal', (data) => {
+    //   this.$refs.authModal.show(data);
+    // });
     this.$store.commit('updateLang', window.language);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.resizeListener);
   },
 };

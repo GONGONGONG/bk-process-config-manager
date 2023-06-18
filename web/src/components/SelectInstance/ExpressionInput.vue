@@ -1,18 +1,17 @@
 <template>
-  <div class="expression-input-container" :class="{ 'active': isActive }"
-       v-bk-clickoutside="handleClickOutside"
-       @click="handleClickContainer">
-    <template v-for="item in fieldsInfo">
-      <div class="single-input-container" :key="item.type">
-        <div class="hold-text">{{ expressionData[item.key] }}</div>
-        <input
-          v-test.range="'expressionInput'"
-          v-model.trim="expressionData[item.key]"
-          class="single-input" placeholder="*"
-          @change="handleChange(item.type, $event)" />
-      </div>
-      <div v-if="item.hasGap" class="gap" :key="item.key + '-gap'">.</div>
-    </template>
+  <div
+    :class="['expression-input-container', { 'active': isActive }]"
+    v-bk-clickoutside="handleClickOutside"
+    @click="handleClickContainer">
+    <div v-for="item in fieldsInfo" class="single-input-container" :key="item.type">
+      <div class="hold-text">{{ expressionData[item.key] }}</div>
+      <input
+        v-test.range="'expressionInput'"
+        v-model.trim="expressionData[item.key]"
+        class="single-input" placeholder="*"
+        @change="handleChange(item.type, $event)" />
+    </div>
+    <div v-if="item.hasGap" class="gap" :key="item.key + '-gap'">.</div>
   </div>
 </template>
 

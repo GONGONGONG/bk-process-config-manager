@@ -9,9 +9,7 @@
     :enable-virtual-scroll="list.length > 50"
     @change="handleChange"
     @selected="handleSelected">
-    <template v-for="item in list">
-      <bk-option :key="item.id" :id="item.id" :name="item.name"></bk-option>
-    </template>
+    <bk-option v-for="item in list" :key="item.id" :id="item.id" :name="item.name" />
   </bk-select>
   <!--<bk-select :value="value"
     :placeholder="name"
