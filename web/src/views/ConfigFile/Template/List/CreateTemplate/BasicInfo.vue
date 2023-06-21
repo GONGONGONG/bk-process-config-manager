@@ -55,7 +55,7 @@ export default {
       formItems: [
         { label: this.$t('模板名称'), required: true, prop: 'template_name', clearable: true, placeholder: this.$t('模板唯一标识') },
         { label: this.$t('文件名称'), required: true, prop: 'file_name', clearable: true, placeholder: this.$t('模板渲染生成的文件名称') },
-        { label: this.$t('文件所处路径'), required: true, prop: 'abs_path', clearable: true, placeholder: this.$t('文件分发到服务器的路径') },
+        { label: this.$t('文件所处目录'), required: true, prop: 'abs_path', clearable: true, placeholder: this.$t('文件分发到服务器的路径') },
         { label: this.$t('文件拥有者'), required: true, prop: 'owner', clearable: true, placeholder: this.$t('拥有者名称，操作系统必须存在此用户') },
         { label: this.$t('文件用户组'), required: true, prop: 'group', clearable: true, placeholder: this.$t('用户组名称，操作系统必须存在此用户组') },
         { label: this.$t('文件权限'), required: true, prop: 'filemode', clearable: true, placeholder: this.$t('文件的权限设置，如0775') },

@@ -43,7 +43,7 @@
         :row-style="setRowStyle"
         :outer-border="false"
         @row-click="handleClickRow">
-        <bk-table-column prop="name" width="134" :label="$t('名称')" v-bk-overflow-tips></bk-table-column>
+        <NmColumn prop="name" width="134" :label="$t('名称')" />
         <bk-table-column prop="value" :label="$t('变量')">
           <template slot-scope="{ row, $index }">
             <bk-popover

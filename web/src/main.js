@@ -6,15 +6,9 @@ import router from '@/router';
 import store from '@/store';
 import i18n from '@/language/i18n';
 import { bus } from '@/common/bus';
-import '@/common/bkmagic';
-import '@/common/directives';
-import '@icon-cool/bk-icon-gsekit';
-import '@/common/svg';
-import '@/common/text-tool';
 import { injectCSRFTokenToHeaders } from '@/api';
-import '@/mixins/emptyMixin.js';
-import StatusView from '@/components/StatusView';
-import TableException from '@/components/Empty/TableException';
+import '@/common/plugin';
+// import '@icon-cool/bk-icon-gsekit';
 
 try {
   const id = window.PROJECT_CONFIG.TAM_AEGIS_KEY;
@@ -35,8 +29,6 @@ try {
 }
 
 Vue.config.devtools = true;
-Vue.component('StatusView', StatusView);
-Vue.component('TableException', TableException);
 
 injectCSRFTokenToHeaders();
 getUserInfo().then(() => {

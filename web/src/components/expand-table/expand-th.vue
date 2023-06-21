@@ -1,13 +1,16 @@
 <template>
   <div class="expand-th-container">
-    <span
+    <div
       v-if="column.tips"
-      class="text-has-tips"
+      class="text-overflow-row"
+      :title="column.label"
       v-bk-tooltips="{
         content: column.tips,
         placement: tipsPlacement
-      }">{{ column.label }}</span>
-    <span v-else>{{ column.label }}</span>
+      }">
+      <span class="text-has-tips">{{ column.label }}</span>
+    </div>
+    <div v-else class="text-overflow-row" v-bk-overflow-tips>{{ column.label }}</div>
     <div
       class="expand-btn"
       v-bk-tooltips="{
@@ -48,6 +51,10 @@ export default {
 <style lang="postcss" scoped>
   .expand-th-container {
     position: relative;
+
+    .text-overflow-row {
+      width: 100%;
+    }
 
     .expand-btn {
       position: absolute;

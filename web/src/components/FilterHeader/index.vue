@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="filter-header" :class="{ 'default': filterList.length === 0 }" @click.stop="handleShow($event)">
-      {{ name }}
+      <div class="text-overflow-row" v-bk-overflow-tips>{{ name }}</div>
       <i
         class="header-icon gsekit-icon gsekit-icon-filter-fill"
         :class="{ 'is-selected': isSelected }"
@@ -156,6 +156,9 @@ export default {
   @import '../../css/mixins/scroll.css';
 
   .filter-header {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
     cursor: pointer;
     outline: 0;
 
@@ -165,9 +168,11 @@ export default {
 
     .header-icon {
       position: relative;
+      margin-left: 4px;
       font-size: 13px;
       color: #c4c6cc;
       outline: 0;
+      flex-shrink: 0;
     }
 
     .is-selected {

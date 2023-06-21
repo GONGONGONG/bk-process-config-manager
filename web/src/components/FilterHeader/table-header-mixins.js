@@ -38,11 +38,17 @@ export default {
       this.setChecked(filterList);
       const title = data.column.label || '';
       const property = data.column.property || '';
-      return <FilterHeader
-                name={ title } property={ property } filterList={ filterList }
-                onConfirm={ (prop, list) => this.handleFilterHeaderConfirm(prop, list) }
-                onReset={ prop => this.handleFilterHeaderReset(prop) }>
-            </FilterHeader>;
+      return h(FilterHeader, {
+        props: {
+          name: title,
+          property,
+          filterList,
+        },
+        on: {
+          confirm: (prop, list) => this.handleFilterHeaderConfirm(prop, list),
+          reset: prop => this.handleFilterHeaderReset(prop),
+        },
+      });
     },
     setChecked(data) {
       data.forEach((item) => {

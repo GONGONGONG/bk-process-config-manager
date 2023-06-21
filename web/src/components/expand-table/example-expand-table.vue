@@ -349,7 +349,9 @@ export default {
       return row.disabled ? 'disabled-row' : '';
     },
     tipsRenderHeader(h, { column }) {
-      return <span class="text-has-tips" v-bk-tooltips={ this.subHeadMap[column.property] }>{ column.label }</span>;
+      return <span class="text-has-tips" v-bk-tooltips={ this.subHeadMap[column.property] } title={ column.label }>
+        { column.label }
+      </span>;
     },
   },
 };

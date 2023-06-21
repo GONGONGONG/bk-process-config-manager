@@ -102,57 +102,53 @@
           :pagination="pagination"
           @page-change="handlePageChange"
           @page-limit-change="handlePageLimitChange">
-          <bk-table-column :label="$t('集群')" prop="set_name" :render-header="renderFilterHeader" show-overflow-tooltip>
+          <NmColumn :label="$t('集群')" prop="set_name" :render-header="renderFilterHeader">
             <template slot-scope="{ row }">
               <span>{{ row.bk_set_name || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column
-            :label="$t('模块')" prop="template_name" :render-header="renderFilterHeader" show-overflow-tooltip>
+          </NmColumn>
+          <NmColumn
+            :label="$t('模块')" prop="template_name" :render-header="renderFilterHeader">
             <template slot-scope="{ row }">
               <span>{{ row.bk_module_name || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column :label="$t('服务实例')" min-width="180" prop="server_instance" show-overflow-tooltip>
+          </NmColumn>
+          <NmColumn :label="$t('服务实例')" min-width="180" prop="server_instance">
             <template slot-scope="{ row }">
               <span>{{ row.name || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column
-            :label="$t('进程别名')"
-            prop="process_name"
-            show-overflow-tooltip
-            :render-header="renderFilterHeader">
+          </NmColumn>
+          <NmColumn :label="$t('进程别名')" prop="process_name" :render-header="renderFilterHeader">
             <template slot-scope="{ row }">
               <span>{{ row.bk_process_name || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column label="process_id" prop="bk_process_id" show-overflow-tooltip>
+          </NmColumn>
+          <NmColumn label="process_id" prop="bk_process_id">
             <template slot-scope="{ row }">
               <span>{{ row.bk_process_id || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column label="inst_id" prop="inst_id" width="70">
+          </NmColumn>
+          <NmColumn label="inst_id" prop="inst_id" width="70">
             <template slot-scope="{ row }">
               <span>{{ row.extra_data.inst_id || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column :label="$t('进程优先级')" prop="priority">
+          </NmColumn>
+          <NmColumn :label="$t('进程优先级')" prop="priority">
             <template slot-scope="{ row }">
               <span>{{ row.priority || row.priority === 0 ? row.priority : '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column :label="$t('内网IP')" prop="bk_host_innerip" width="125">
+          </NmColumn>
+          <NmColumn :label="$t('内网IP')" prop="bk_host_innerip" width="125">
             <template slot-scope="{ row }">
               <span>{{ row.bk_host_innerip || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column :label="$t('执行耗时')" prop="timeout" width="100" show-overflow-tooltip>
+          </NmColumn>
+          <NmColumn :label="$t('执行耗时')" prop="timeout" width="100">
             <template slot-scope="{ row }">
               <span>{{ row.timeout || '--' }}</span>
             </template>
-          </bk-table-column>
-          <bk-table-column :label="$t('执行状态')" width="140" prop="status" :render-header="renderFilterHeader">
+          </NmColumn>
+          <NmColumn :label="$t('执行状态')" width="140" prop="status" :render-header="renderFilterHeader">
             <template slot-scope="{ row }">
               <!-- 执行状态 -->
               <div class="status-info">
@@ -171,7 +167,7 @@
                 <StatusView v-else type="loading" :text="$t('正在执行')" />
               </div>
             </template>
-          </bk-table-column>
+          </NmColumn>
           <!-- <bk-table-column :label="$t('操作')" :min-width="jobInfo.job_object !== 'process' ? 145 : 100"> -->
           <bk-table-column v-if="showOperateColumn" :label="$t('操作')" :min-width="100">
             <div slot-scope="{ row }" @click.stop>

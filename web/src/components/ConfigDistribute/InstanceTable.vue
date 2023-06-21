@@ -70,37 +70,21 @@
       :empty-text="$t('当前指定范围未能匹配到实例，请确认所选范围是否有误，或对应范围是否存在主机')"
       v-show="showTable"
       v-bkloading="{ isLoading: tableLoading, zIndex: 0 }">
-      <bk-table-column :label="$t('进程别名')" min-width="140">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_process_name }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column :label="$t('所属拓扑')" min-width="400">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_set_name }} / {{ row.bk_module_name }} / {{ row.bk_service_name }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column label="process_id" min-width="140">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_process_id }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column label="inst_id" min-width="110">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.inst_id }}</span>
-        </div>
-      </bk-table-column>
+      <NmColumn :label="$t('进程别名')" prop="bk_process_name" min-width="140" />
+      <NmColumn :label="$t('所属拓扑')" min-width="400">
+        <template slot-scope="{ row }">
+          {{ row.bk_set_name }} / {{ row.bk_module_name }} / {{ row.bk_service_name }}
+        </template>
+      </NmColumn>
+      <NmColumn label="process_id" prop="bk_process_id" min-width="140" />
+      <NmColumn label="inst_id" prop="inst_id" min-width="110" />
       <template v-if="curStep === 1">
-        <bk-table-column :label="$t('版本号')" min-width="140" key="configVersionId">
-          <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-            <span>#{{ row.config_version_id }}</span>
-          </div>
-        </bk-table-column>
-        <bk-table-column :label="$t('版本描述')" min-width="140" key="configVersionDescription">
-          <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-            <span>{{ row.configVersionDescription }}</span>
-          </div>
-        </bk-table-column>
+        <NmColumn :label="$t('版本号')" prop="config_version_id" min-width="140" key="configVersionId" />
+        <NmColumn
+          :label="$t('版本描述')"
+          prop="configVersionDescription"
+          min-width="140"
+          key="configVersionDescription" />
         <bk-table-column :label="$t('操作')" min-width="140" key="compareConfiguration">
           <template slot-scope="{ row }">
             <bk-popover
@@ -122,7 +106,7 @@
         </bk-table-column>
       </template>
       <template v-if="curStep === 2">
-        <bk-table-column :label="$t('状态')" prop="taskStatus" min-width="110" key="taskStatus">
+        <NmColumn :label="$t('状态')" prop="taskStatus" min-width="110" key="taskStatus">
           <div slot-scope="{ row }">
             <StatusView
               v-if="row.taskStatus === 'pending' || row.taskStatus === 'running'"
@@ -134,12 +118,12 @@
               :failed-reason="row.failed_reason"
               :solutions="row.solutions" />
           </div>
-        </bk-table-column>
-        <bk-table-column :label="$t('生成时间')" min-width="170" key="generatedTime">
-          <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
+        </NmColumn>
+        <NmColumn :label="$t('生成时间')" min-width="170" key="generatedTime">
+          <template slot-scope="{ row }">
             <span>{{ row.generatedTime || '--' }}</span>
-          </div>
-        </bk-table-column>
+          </template>
+        </NmColumn>
         <bk-table-column :label="$t('操作')" min-width="140" key="regenerate">
           <template slot-scope="{ row }">
             <bk-button

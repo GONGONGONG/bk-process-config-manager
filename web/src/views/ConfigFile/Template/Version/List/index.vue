@@ -27,12 +27,12 @@
         :data="searchedVersionList"
         :max-height="$store.state.pageHeight - 280"
         @row-click="handleRowClick">
-        <bk-table-column :label="$t('版本ID')" min-width="150">
+        <NmColumn :label="$t('版本ID')" min-width="150">
           <template slot-scope="{ row }">
             <bk-button v-test="'viewVersion'" theme="primary" text>{{ row.config_version_id }}</bk-button>
           </template>
-        </bk-table-column>
-        <bk-table-column :label="$t('版本描述')" min-width="300">
+        </NmColumn>
+        <bk-table-column :label="$t('版本描述')" min-width="300" :render-header="$defaultThead">
           <div class="version-description" slot-scope="{ row }">
             <span v-bk-overflow-tips
                   :class="{ 'lighten-text': !row.is_draft && !row.is_active, 'text-overflow-row': true }">
@@ -42,7 +42,7 @@
             <TagAvailable v-else-if="row.is_active" />
           </div>
         </bk-table-column>
-        <bk-table-column
+        <NmColumn
           :label="$t('更新人')"
           min-width="150"
           :filters="updatePersonFilters"
@@ -51,17 +51,16 @@
           <template slot-scope="{ row }">
             <div :class="{ 'lighten-text': !row.is_draft && !row.is_active }">{{ row.updated_by }}</div>
           </template>
-        </bk-table-column>
-        <bk-table-column
+        </NmColumn>
+        <NmColumn
           :label="$t('更新时间')"
           min-width="220"
           sortable
-          :sort-method="sortByDate('updated_at')"
-          v-bk-overflow-tips>
+          :sort-method="sortByDate('updated_at')">
           <template slot-scope="{ row }">
             <div :class="{ 'lighten-text': !row.is_draft && !row.is_active }">{{ formatDate(row.updated_at) }}</div>
           </template>
-        </bk-table-column>
+        </NmColumn>
         <bk-table-column :label="$t('操作')" min-width="200">
           <template slot-scope="{ row }">
             <div class="button-container">

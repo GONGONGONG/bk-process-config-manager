@@ -31,43 +31,42 @@
       @row-click="handleRowClick"
       @page-change="handlePageChange"
       @page-limit-change="handlePageLimitChange">
-      <bk-table-column prop="id" :label="$t('ID')" width="90">
+      <NmColumn prop="id" :label="$t('ID')" width="90">
         <template slot-scope="props">
           <span class="button-text" v-test="'viewTask'">{{ props.row.id }}</span>
         </template>
-      </bk-table-column>
-      <bk-table-column
+      </NmColumn>
+      <NmColumn
         prop="job_object"
         :label="$t('任务对象')"
         :min-width="columnMinWidth['job_object']"
         :render-header="renderFilterHeader">
         <template slot-scope="props">
           <span>{{ jobObject[props.row.job_object] }}</span>
-        </template></bk-table-column>
-      <bk-table-column
+        </template>
+      </NmColumn>
+      <NmColumn
         prop="job_action"
         :label="$t('动作')"
         :min-width="columnMinWidth['job_action']"
         :render-header="renderFilterHeader">
         <template slot-scope="props">
           <span>{{ jobAction[props.row.job_action] }}</span>
-        </template></bk-table-column>
-      <bk-table-column prop="job_env" :label="$t('环境类型')" :min-width="columnMinWidth['job_env']">
+        </template>
+      </NmColumn>
+      <NmColumn prop="job_env" :label="$t('环境类型')" :min-width="columnMinWidth['job_env']">
         <template slot-scope="{ row }">
           <span>{{ setEnv[row.expression_scope.bk_set_env] || '--' }}</span>
-        </template></bk-table-column>
-      <bk-table-column prop="expression" :label="$t('操作范围')" :min-width="columnMinWidth['expression']">
-        <div v-bk-overflow-tips slot-scope="{ row }">
-          {{ row.expression }}
-        </div>
-      </bk-table-column>
-      <bk-table-column
+        </template>
+      </NmColumn>
+      <NmColumn prop="expression" :label="$t('操作范围')" :min-width="columnMinWidth['expression']" />
+      <NmColumn
         prop="created_by"
         :label="$t('执行账户')"
         show-overflow-tooltip
         :min-width="columnMinWidth['created_by']"
         :render-header="renderFilterHeader" />
-      <bk-table-column
+      <NmColumn
         prop="start_time"
         :label="$t('开始时间')"
         sortable="custom"
@@ -75,8 +74,8 @@
         <template slot-scope="props">
           <div v-bk-overflow-tips>{{ props.row.start_time || '--' }}</div>
         </template>
-      </bk-table-column>
-      <bk-table-column
+      </NmColumn>
+      <NmColumn
         prop="end_time"
         :label="$t('结束时间')"
         sortable="custom"
@@ -84,14 +83,13 @@
         <template slot-scope="props">
           <div v-bk-overflow-tips>{{ props.row.end_time || '--' }}</div>
         </template>
-      </bk-table-column>
-      <bk-table-column prop="timeout" :label="$t('执行耗时')"
-                       :min-width="columnMinWidth['timeout']">
+      </NmColumn>
+      <NmColumn prop="timeout" :label="$t('执行耗时')" :min-width="columnMinWidth['timeout']">
         <template slot-scope="props">
           <span>{{ props.row.timeout || '--' }}</span>
         </template>
-      </bk-table-column>
-      <bk-table-column
+      </NmColumn>
+      <NmColumn
         prop="status"
         :label="$t('执行状态')"
         :render-header="renderFilterHeader"
@@ -103,7 +101,7 @@
           <StatusView v-else-if="row.status === 'running'" type="loading" :text="$t('正在执行')" />
           <StatusView v-else type="loading" :text="$t('等待中')" />
         </template>
-      </bk-table-column>
+      </NmColumn>
       <bk-table-column :label="$t('操作')" :min-width="columnMinWidth['operate']">
         <div slot-scope="props" @click.stop>
           <bk-button

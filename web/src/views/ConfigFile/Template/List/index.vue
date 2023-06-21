@@ -31,7 +31,7 @@
       @sort-change="handleSortChange"
       @page-change="handlePageChange"
       @page-limit-change="handlePageLimitChange">
-      <bk-table-column :label="$t('模板名称')" prop="template_name" sortable="custom">
+      <bk-table-column :label="$t('模板名称')" prop="template_name" sortable="custom" :render-header="$defaultThead">
         <div class="template-name-column" slot-scope="{ row }">
           <AuthTag
             v-bk-overflow-tips
@@ -49,17 +49,9 @@
             class="gsekit-icon gsekit-icon-alert"></span>
         </div>
       </bk-table-column>
-      <bk-table-column :label="$t('文件名')" prop="file_name" sortable="custom">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.file_name }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column :label="$t('文件所处路径')" prop="abs_path" sortable="custom">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.abs_path }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column :label="$t('关联进程数')">
+      <NmColumn :label="$t('文件名')" prop="file_name" sortable="custom" />
+      <NmColumn :label="$t('文件所处目录')" prop="abs_path" sortable="custom" />
+      <bk-table-column :label="$t('关联进程数')" :render-header="$defaultThead">
         <template slot-scope="{ row }">
           <bk-popover v-if="row.is_bound" placement="right">
             <div
@@ -79,18 +71,17 @@
           </div>
         </template>
       </bk-table-column>
-      <bk-table-column
+      <NmColumn
         :label="$t('更新人')"
         prop="updated_by"
         :filters="updatePersonFilters"
         :filter-method="commonFilterMethod"
-        :filter-multiple="true"
-      ></bk-table-column>
-      <bk-table-column :label="$t('更新时间')" prop="updated_at" sortable="custom" show-overflow-tooltip>
+        :filter-multiple="true" />
+      <NmColumn :label="$t('更新时间')" prop="updated_at" sortable="custom">
         <template slot-scope="{ row }">
           {{ formatDate(row.updated_at) }}
         </template>
-      </bk-table-column>
+      </NmColumn>
       <bk-table-column :label="$t('操作')" :width="operateColWidth">
         <div class="table-operation-container" slot-scope="{ row }">
           <AuthTag class="bk-button-text" action="operate_config" :authorized="authMap.operate_config">

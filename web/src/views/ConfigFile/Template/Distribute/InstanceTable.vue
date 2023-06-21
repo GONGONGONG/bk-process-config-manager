@@ -22,43 +22,15 @@
       :max-height="maxHeight"
       :empty-text="emptyText"
       :data="tableLoadedList">
-      <bk-table-column :label="$t('集群')">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_set_name }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column :label="$t('模块')">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_module_name }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column :label="$t('服务实例')">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_service_name }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column :label="$t('进程别名')">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_process_name }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column label="process_id">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_process_id }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column label="inst_id">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.inst_id }}</span>
-        </div>
-      </bk-table-column>
-      <bk-table-column :label="$t('内网IP')">
-        <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
-          <span>{{ row.bk_host_innerip }}</span>
-        </div>
-      </bk-table-column>
+      <NmColumn :label="$t('集群')" prop="bk_set_name" />
+      <NmColumn :label="$t('模块')" prop="bk_module_name" />
+      <NmColumn :label="$t('服务实例')" prop="bk_service_name" />
+      <NmColumn :label="$t('进程别名')" prop="bk_process_name" />
+      <NmColumn label="process_id" prop="bk_process_id" />
+      <NmColumn label="inst_id" prop="inst_id" />
+      <NmColumn :label="$t('内网IP')" prop="bk_host_innerip" />
       <template v-if="curStep === 2">
-        <bk-table-column :label="$t('状态')" prop="taskStatus">
+        <NmColumn :label="$t('状态')" prop="taskStatus">
           <template slot-scope="{ row }">
             <StatusView
               v-if="row.taskStatus === 'pending' || row.taskStatus === 'running'"
@@ -71,7 +43,7 @@
               :solutions="row.solutions">
             </GenerateFailed>
           </template>
-        </bk-table-column>
+        </NmColumn>
         <bk-table-column :label="$t('操作')" width="170px">
           <template slot-scope="{ row }">
             <bk-button

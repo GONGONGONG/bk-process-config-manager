@@ -20,7 +20,7 @@
         align="center"
         v-bind="{
           ...parent,
-          [parent.isExpandable ? 'renderHeader' : 'other']: headRenderExpand
+          renderHeader: parent.isExpandable ? headRenderExpand : $defaultThead
         }">
         <!-- 默认有子集 -->
         <bk-table-column
@@ -51,15 +51,21 @@
               <bk-table-column v-else :key="head.prop" v-bind="head"></bk-table-column>
             </template>
             <!-- Column - 自定义slot, slotNameStr -->
-            <bk-table-column
+            <NmColumn
               v-else-if="head.slotNameStr"
               :key="head.prop"
               v-bind="head">
               <template slot-scope="{ row, $index }">
                 <slot :name="head.slotNameStr" :row="row" :$index="$index"></slot>
               </template>
-            </bk-table-column>
-            <bk-table-column class-name="edit-cell" v-else-if="edit && head.editAble" :key="head.prop" v-bind="head">
+            </NmColumn>
+            <bk-table-column
+              class-name="edit-cell"
+              v-else-if="edit && head.editAble"
+              show-overflow-tooltip
+              :key="head.prop"
+              :render-header="$defaultThead"
+              v-bind="head">
               <template slot-scope="{ row, $index }">
                 <div
                   class="bk-form-control edit-input"
@@ -97,11 +103,11 @@
               </template>
             </bk-table-column>
             <!-- Column - 常规 -->
-            <bk-table-column v-else :key="head.prop" v-bind="head">
+            <NmColumn v-else :key="head.prop" v-bind="head">
               <template slot-scope="{ row }">
                 {{ emptyCell(row[head.prop]) }}
               </template>
-            </bk-table-column>
+            </NmColumn>
           </template>
         </template>
       </bk-table-column>
@@ -429,8 +435,11 @@ export default {
       overflow: visible;
       z-index: 2;
 
-      .cell,
+      .cell {
+        overflow: visible;
+      }
       .bk-table-header-label {
+        max-width: 100%;
         overflow: visible;
       }
     }

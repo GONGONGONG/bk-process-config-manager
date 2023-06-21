@@ -65,37 +65,43 @@
         </div>
       </bk-table-column>
       <template v-for="item in setting.selectedFields">
-        <bk-table-column
+        <NmColumn
           v-if="!['process_status', 'is_auto', 'bk_process_id'].includes(item.id)"
           :key="item.id"
           :label="item.label"
           :prop="item.id"
           :min-width="columnMinWidth[item.id]"
           :sortable="item.sortable ? 'custom' : ''">
-          <div slot-scope="{ row }" v-bk-overflow-tips>
-            <!-- 配置文件数 -->
-            <!-- <div v-if="item.id === 'config_templates'" @click.stop>
-              <template v-if="row.templateCount">
-                <bk-popover placement="right">
-                  <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
-                  <div slot="content">
-                    <div v-for="file in row.config_templates" :key="file.config_template_id">
-                      <span>{{ file.template_name }}</span>
-                      {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
-                    </div>
+          <template slot-scope="{ row }">
+          <!-- 配置文件数 -->
+          <!-- <div v-if="item.id === 'config_templates'" @click.stop>
+            <template v-if="row.templateCount">
+              <bk-popover placement="right">
+                <span class="file-num" @click="onCheckProcessConfig(row, 'configFile')">{{ row.templateCount }}</span>
+                <div slot="content">
+                  <div v-for="file in row.config_templates" :key="file.config_template_id">
+                    <span>{{ file.template_name }}</span>
+                    {{ $t('（') }}<span>{{ file.file_name }}</span>{{ $t('）') }}
                   </div>
-                </bk-popover>
-              </template>
-              <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
-            </div>
-            其他
-            <template v-else> -->
-            <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
-            <!-- </template> -->
+                </div>
+              </bk-popover>
+            </template>
+            <span class="file-num" v-else @click="onCheckProcessConfig(row, 'configFile')">{{ '0' }}</span>
           </div>
-        </bk-table-column>
+          其他
+          <template v-else> -->
+            <a
+              href="javascript: void(0)"
+              class="bk-button-text bk-primary"
+              v-if="item.id === 'bk_set_name' && row[item.id]"
+              @click.stop="onCheckProcessConfig(row)">
+              {{ row[item.id] }}
+            </a>
+            <span v-else>{{ row[item.id] || '--' }}</span>
+          </template>
+        </NmColumn>
         <!-- process_id -->
-        <bk-table-column
+        <NmColumn
           v-if="item.id === 'bk_process_id'"
           :label="item.label"
           :prop="item.id"
@@ -103,12 +109,10 @@
           :min-width="columnMinWidth[item.id]"
           sortable="custom"
           :render-header="renderProcessHeader">
-          <template slot-scope="{ row }">
-            <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
-          </template>
-        </bk-table-column>
+          <template slot-scope="{ row }">{{ row[item.id] || '--' }}</template>
+        </NmColumn>
         <!-- 进程状态 -->
-        <bk-table-column
+        <NmColumn
           v-if="item.id === 'process_status'"
           :label="item.label"
           :prop="item.id"
@@ -120,7 +124,7 @@
             <StatusView v-else-if="row.process_status === 1" type="success" :is-solid="true" :text="$t('运行中')" />
             <StatusView v-else-if="row.process_status === 2" type="failed" :is-solid="true" :text="$t('未运行')" />
           </template>
-        </bk-table-column>
+        </NmColumn>
         <!-- 托管状态 -->
         <bk-table-column
           v-if="item.id === 'is_auto'"
